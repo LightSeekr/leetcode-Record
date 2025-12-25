@@ -1,4 +1,4 @@
-package BinarySearch
+package binarySearch
 
 import "fmt"
 
