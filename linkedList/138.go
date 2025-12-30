@@ -8,6 +8,15 @@ type Node struct {
 	Random *Node
 }
 
+/**
+ 难在随机 random 节点的指向上
+ 问题在于：新的链表的 random 如何指向新的节点
+ 具体做法是先把新节点，放在老节点的后面
+old1 ->new1->old2->new2 这种
+然后 new1->Random = old1->Random->Next
+再拆开两条链表，就可以了。
+*/
+
 func CopyRandomList(head *Node) *Node {
 	// 边界 case
 	if head == nil {

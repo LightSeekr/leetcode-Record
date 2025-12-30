@@ -21,6 +21,7 @@ func MergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
 		}
 		tail = tail.Next
 	}
+
 	if p != nil {
 		tail.Next = p
 	}
