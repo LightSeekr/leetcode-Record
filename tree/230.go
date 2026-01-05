@@ -1,30 +1,44 @@
 package tree
 
+/**
+给定一个二叉搜索树的根节点 root ，和一个整数 k ，请你设计一个算法查找其中第 k 小的元素（k 从 1 开始计数）。
+*/
+
+// 直接一个中序遍历
 func kthSmallest(root *TreeNode, k int) int {
-	var result int
+	res := make([]int, 0)
+	var inOrder func(root *TreeNode)
 
-	// 定义中序遍历函数
-	var inorder func(node *TreeNode)
-	inorder = func(node *TreeNode) {
-		// 如果节点为空，或者已经找到了答案（k==0），直接返回
-		if node == nil || k == 0 {
+	inOrder = func(root *TreeNode) {
+		if root == nil {
+			return
+		}
+		inOrder(root.Left)
+		res = append(res, root.Val)
+		inOrder(root.Right)
+	}
+	inOrder(root)
+	return res[k-1]
+}
+
+// 对中序遍历做一些优化
+func kthSmallest2(root *TreeNode, k int) int {
+	res := 0
+	var inOrder func(root *TreeNode)
+	inOrder = func(root *TreeNode) {
+		if root == nil || k == 0 {
 			return
 		}
 
-		// 1. 先去左边
-		inorder(node.Left)
-
-		// 2. 处理当前节点
-		k-- // 每访问一个节点，k 就减 1
+		inOrder(root.Left)
+		k--
 		if k == 0 {
-			result = node.Val
+			res = root.Val
 			return
 		}
-
-		// 3. 再去右边
-		inorder(node.Right)
+		inOrder(root.Right)
 	}
 
-	inorder(root)
-	return result
+	inOrder(root)
+	return res
 }
