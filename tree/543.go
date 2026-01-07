@@ -12,32 +12,27 @@ package tree
 */
 
 func diameterOfBinaryTree(root *TreeNode) int {
+	/**
+	  要想直径最长
+	  那么就是两个节点之间路径最长
+	  那么一定就在左右两边一边一个。
+	  这没办法直接求直径
+	  借助求深度来求
+	  **/
 	maxDiameter := 0
-
-	// 定义递归函数
-	var dfs func(node *TreeNode) int
-	dfs = func(node *TreeNode) int {
-		// 递归终止条件
-		if node == nil {
+	var getDepth func(root *TreeNode) int
+	getDepth = func(root *TreeNode) int {
+		if root == nil {
 			return 0
 		}
-
-		// 1. 获取左子树的最大深度（单链长度）
-		leftDepth := dfs(node.Left)
-
-		// 2. 获取右子树的最大深度（单链长度）
-		rightDepth := dfs(node.Right)
-
-		// 3. 计算穿过当前节点的最长路径长度
-		// 路径长度 = 左边深度 + 右边深度
-		// 尝试更新全局最大值
-
+		leftDepth := getDepth(root.Left)
+		rightDepth := getDepth(root.Right)
 		maxDiameter = max(maxDiameter, leftDepth+rightDepth)
 
-		// 4. 返回值：返回给父节点的是以当前节点为端点的最长链长度
-		// 必须选左边或右边更长的一条，并加上当前节点自己 (+1)
 		return max(leftDepth, rightDepth) + 1
 	}
-	dfs(root)
+
+	getDepth(root)
 	return maxDiameter
+
 }
