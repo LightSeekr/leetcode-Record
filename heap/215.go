@@ -1,6 +1,63 @@
 package heap
 
-import "math/rand"
+import (
+	"math/rand"
+)
+
+func findKthLargest2(nums []int, k int) int {
+	//  1. 取前 k 个元素初始化堆
+	//      注意：这里需要拷贝，不要直接引用原切片，以免破坏原数组（虽然题解允许）
+	heap := make([]int, k)
+	copy(heap, nums[:k])
+	// 	2. 建堆 (Build Heap) - O(k)
+	// 	 从最后一个非叶子节点 (k/2 - 1) 开始，依次下沉
+	for i := k/2 - 1; i >= 0; i-- {
+		Sink(heap, i, k)
+	}
+	// 	 3. 遍历剩下的元素 - O((N-k) log k)
+	// 	 如果当前数字比堆顶（目前前k大的最小值）还要大
+	// 	 说明它应该进入“前k大”的名单
+	for i := k; i < len(nums); i++ {
+		if nums[i] > heap[0] {
+			heap[0] = nums[i]
+			Sink(heap, 0, k)
+		}
+	}
+
+	// 4. 小顶堆的堆顶就是第 k 大
+	return heap[0]
+}
+
+/*
+手写下沉逻辑 (核心)
+i: 当前要下沉的节点索引
+n: 堆的大小
+*
+*/
+func Sink(nums []int, idx, n int) {
+	for {
+		// 假设父节点最小
+		left := idx*2 + 1
+		right := idx*2 + 2
+		smallest := idx
+		// 如果左孩子存在，且比当前最小的还小
+		if left < n && nums[left] < nums[smallest] {
+			smallest = left
+		}
+		// 如果右孩子存在，且比当前最小的还小
+		if right < n && nums[right] < nums[smallest] {
+			smallest = right
+		}
+		// 如果最小值还是自己，说明位置对了，停止下沉
+		if smallest == idx {
+			break
+		}
+
+		// 否则，交换，并继续向下沉
+		nums[idx], nums[smallest] = nums[smallest], nums[idx]
+		idx = smallest
+	}
+}
 
 func findKthLargest(nums []int, k int) int {
 	// 使用快速选择算法
