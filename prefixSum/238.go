@@ -1,7 +1,5 @@
 package prefixSum
 
-import "fmt"
-
 /*
 *
 给你一个整数数组 nums，返回 数组 answer ，
@@ -13,46 +11,63 @@ import "fmt"
 可以进一步优化，然后 不用特判 0 和 n-1 的情况
 前后缀分解
 */
+//func productExceptSelf(nums []int) []int {
+//	n := len(nums)
+//	left := make([]int, n)
+//	for i := 0; i < n; i++ {
+//		if i == 0 {
+//			left[i] = nums[i]
+//		} else {
+//			left[i] = left[i-1] * nums[i]
+//		}
+//	}
+//	right := make([]int, n)
+//	for i := n - 1; i >= 0; i-- {
+//		if i == n-1 {
+//			right[i] = nums[i]
+//		} else {
+//			right[i] = right[i+1] * nums[i]
+//		}
+//	}
+//	res := make([]int, n)
+//	for i := 0; i < n; i++ {
+//		if i == 0 {
+//			res[i] = right[i+1]
+//		} else if i == n-1 {
+//			res[i] = left[i-1]
+//		} else {
+//			res[i] = left[i-1] * right[i+1]
+//		}
+//	}
+//	return res
+//}
+
 func productExceptSelf(nums []int) []int {
 	n := len(nums)
+	// 构建左右的前缀积
+	// left[i] 表示 nums[0] * nums[1] * ... * nums[i]
 	left := make([]int, n)
-	for i := 0; i < n; i++ {
-		if i == 0 {
-			left[i] = nums[i]
-		} else {
-			left[i] = left[i-1] * nums[i]
-		}
-	}
 	right := make([]int, n)
-	for i := n - 1; i >= 0; i-- {
-		if i == n-1 {
-			right[i] = nums[i]
-		} else {
-			right[i] = right[i+1] * nums[i]
-		}
+	left[0] = nums[0]
+	for i := 1; i < n; i++ {
+		left[i] = left[i-1] * nums[i]
 	}
-	res := make([]int, n)
-	for i := 0; i < n; i++ {
-		if i == 0 {
-			res[i] = right[i+1]
-		} else if i == n-1 {
-			res[i] = left[i-1]
-		} else {
-			res[i] = left[i-1] * right[i+1]
-		}
+	// right[i] 表示 nums[i] * nums[i+2] * ... * nums[n-1]
+	right[n-1] = nums[n-1]
+	for i := n - 2; i >= 0; i-- {
+		right[i] = right[i+1] * nums[i]
 	}
-	return res
-}
+	//fmt.Println(right)
 
-func answer(nums []int) []int {
-	res := make([]int, len(nums))
-	n := 1
-	for _, num := range nums {
-		n *= num
+	ans := make([]int, n)
+	for i := 0; i < n; i++ {
+		ans[i] = 1
+		if i-1 >= 0 {
+			ans[i] *= left[i-1]
+		}
+		if i+1 < n {
+			ans[i] *= right[i+1]
+		}
 	}
-	for i := 0; i < len(nums); i++ {
-		res[i] = n / nums[i]
-	}
-	fmt.Println("answer: ", res)
-	return res
+	return ans
 }
