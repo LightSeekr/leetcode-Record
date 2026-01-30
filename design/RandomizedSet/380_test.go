@@ -1,7 +1,8 @@
-package design
+package RandomizedSet
 
 import (
 	"fmt"
+	"go_interview/leetcode/design/LRUCache"
 	"testing"
 )
 
@@ -9,7 +10,7 @@ import (
 // [[],[0],[0],[0],[],[0],[0]]
 // [null,false,false,true,0,true,true]
 func TestRandomizedSet(t *testing.T) {
-	randomizedSet := Constructor()
+	randomizedSet := LRUCache.Constructor()
 	res := randomizedSet.Remove(0)
 	fmt.Println("res=false", res)
 	res = randomizedSet.Remove(0)
