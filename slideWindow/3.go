@@ -2,6 +2,31 @@ package slideWindow
 
 import "fmt"
 
+/*
+*
+给定一个字符串 s ，请你找出其中不含有重复字符的 最长 子串 的长度。
+*
+*/
+
+func lengthOfLongestSubstring3(s string) int {
+	// 滑动窗口
+	// r++ 将字符都放进去。
+	// 如果出现重复，窗口移动,l++
+	// 更新长度
+	Map := make(map[byte]int)
+	res, l := 0, 0
+	for r := 0; r < len(s); r++ {
+		ch := s[r]
+		if idx, ok := Map[ch]; ok {
+			// 当前字符存在重复
+			l = max(l, idx+1)
+		}
+		Map[ch] = r
+		res = max(res, r-l+1)
+	}
+	return res
+}
+
 func lengthOfLongestSubstring2(s string) int {
 	n := len(s)
 	if n <= 1 {
@@ -26,54 +51,8 @@ func lengthOfLongestSubstring2(s string) int {
 	return ans
 }
 
+// 没问题，就是写的啰嗦了。
 func lengthOfLongestSubstring(s string) int {
-	// 这样写也没问题。
-	// 注意是用hashMap 计数器，不仅判断是否存在，还要判断个数
-	// 还是用 hashSet 集合，只需要判断存在即可
-	// 现在的问题是，应该用循环还是用 if +循环呢？来判断结果 答案在什么时候可以更新？ labuladong 用的是 for
-	n := len(s)
-	if n <= 1 {
-		return n
-	}
-	charMap := make(map[rune]int)
-	l, ans := 0, 0
-	for r, ch := range s {
-		for charMap[ch] > 0 {
-			//出现重复 移动 l
-			// 这里 l 在之前判断过，所以这里一定存在。
-			charMap[rune(s[l])] = charMap[rune(s[l])] - 1
-			l++
-		}
-		ans = max(ans, r-l+1)
-		charMap[ch] = 1
-	}
-	return ans
-}
-
-func lengthOfLongestSubstring_slide(s string) int {
-	n := len(s)
-	if n <= 1 {
-		return n
-	}
-	charMap := make(map[rune]int)
-	l, ans := 0, 0
-	for r, ch := range s {
-		//这里还有个问题就是 写 if 还是写 for ？
-		// 写 for
-		for charMap[ch] > 0 {
-			//出现重复 移动 l
-			// 这里 l 在之前判断过，所以这里一定存在。
-			charMap[rune(s[l])] = charMap[rune(s[l])] - 1
-			l++
-		}
-		ans = max(ans, r-l+1)
-		charMap[ch] = 1
-	}
-	return ans
-}
-
-// 给定一个字符串 s ，请你找出其中不含有重复字符的 最长 子串 的长度。
-func lengthOfLongestSubstring1(s string) int {
 	n := len(s)
 	if n <= 1 {
 		return n
